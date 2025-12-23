@@ -12,7 +12,7 @@ const HeroSlider = () => {
       subtitle: "You Cannot Expect Quality Into The Product, It's Already Part Of You From The Product Of My Colleagues, I Am A Product Of My Decision.",
       buttonText: "View More",
       bgColor: "bg-gradient-to-r from-blue-100 to-blue-200",
-      image: "https://via.placeholder.com/500x300/007bff/ffffff?text=Computer+Setup",
+      image: "https://images.unsplash.com/photo-1445205170230-053b83016050",
       badge: "40% Off"
     },
     {
@@ -21,7 +21,7 @@ const HeroSlider = () => {
       subtitle: "Discover the newest gadgets and electronics with unbeatable prices and quality assurance.",
       buttonText: "Shop Now",
       bgColor: "bg-gradient-to-r from-green-100 to-green-200",
-      image: "https://via.placeholder.com/500x300/28a745/ffffff?text=Electronics",
+      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b",
       badge: "New Arrival"
     },
     {
@@ -30,7 +30,7 @@ const HeroSlider = () => {
       subtitle: "Transform your home with our premium appliances collection. Quality meets affordability.",
       buttonText: "Explore",
       bgColor: "bg-gradient-to-r from-purple-100 to-purple-200",
-      image: "https://via.placeholder.com/500x300/6f42c1/ffffff?text=Home+Appliances",
+      image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9",
       badge: "Best Deal"
     }
   ]
@@ -53,36 +53,34 @@ const HeroSlider = () => {
       <div className="flex transition-transform duration-500 ease-in-out" 
            style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
         {slides.map((slide) => (
-          <div key={slide.id} className={`min-w-full ${slide.bgColor} relative`}>
-            <div className="container mx-auto px-4 py-12 lg:py-20">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                {/* Content */}
-                <div className="space-y-6">
-                  <h1 className="text-4xl lg:text-6xl font-bold text-gray-800 leading-tight">
-                    {slide.title}
-                  </h1>
-                  <p className="text-lg text-gray-600 leading-relaxed max-w-md">
-                    {slide.subtitle}
-                  </p>
-                  <button className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    {slide.buttonText}
-                  </button>
-                </div>
-                
-                {/* Image */}
-                <div className="relative">
-                  {slide.badge && (
-                    <div className="absolute -top-4 -right-4 bg-orange-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg z-10">
-                      {slide.badge}
-                    </div>
-                  )}
-                  <img 
-                    src={slide.image}
-                    alt={slide.title}
-                    className="w-full h-auto max-w-lg mx-auto rounded-lg shadow-xl"
-                  />
-                </div>
+          <div
+            key={slide.id}
+            className="min-w-full relative bg-cover bg-center"
+            style={{
+              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.45), rgba(0,0,0,0.15)), url(${slide.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            {/* Overlay is applied via backgroundImage; content is placed above */}
+            <div className="container mx-auto px-4 py-20 lg:py-28 relative z-10">
+              <div className="max-w-2xl">
+                <h1 className="text-4xl lg:text-6xl font-bold text-white leading-tight">
+                  {slide.title}
+                </h1>
+                <p className="text-lg text-white/90 leading-relaxed mt-4">
+                  {slide.subtitle}
+                </p>
+                <button className="mt-6 bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                  {slide.buttonText}
+                </button>
               </div>
+
+              {slide.badge && (
+                <div className="absolute top-8 right-8 bg-orange-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg z-20">
+                  {slide.badge}
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -107,17 +105,21 @@ const HeroSlider = () => {
         </svg>
       </button>
 
-      {/* Slide indicators */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              currentSlide === index ? 'bg-blue-600' : 'bg-white bg-opacity-50'
-            }`}
-          />
-        ))}
+      {/* Slide indicators - pill-style control */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+        <div className="flex items-center gap-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              title={`Slide ${index + 1}`}
+              className={`bg-white/80 dark:bg-gray-800/60 rounded-full px-3 py-1 shadow-lg backdrop-blur-sm ${
+                currentSlide === index ? 'bg-teal-700 scale-110 shadow-md' : 'bg-[#f59e0b]'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

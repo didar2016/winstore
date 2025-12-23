@@ -1,69 +1,99 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const Categories = () => {
-  const categories = [
-    {
-      id: 'electronics',
-      name: 'Electronics',
-      image: 'https://via.placeholder.com/300x200/007bff/ffffff?text=Electronics',
-      link: '/category/electronics'
-    },
-    {
-      id: 'fashion',
-      name: 'Fashion', 
-      image: 'https://via.placeholder.com/300x200/28a745/ffffff?text=Fashion',
-      link: '/category/fashion'
-    },
-    {
-      id: 'appliances',
-      name: 'Appliances',
-      image: 'https://via.placeholder.com/300x200/17a2b8/ffffff?text=Appliances', 
-      link: '/category/appliances'
-    },
-    {
-      id: 'babies',
-      name: 'Babies Store',
-      image: 'https://via.placeholder.com/300x200/e83e8c/ffffff?text=Babies+Store',
-      link: '/category/babies'
+  const [categories, setCategories] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    const fetchCategories = async () => {
+      try {
+        setLoading(true)
+        const res = await axios.get<string[]>('https://fakestoreapi.com/products/categories')
+        if (!cancelled) {
+          setCategories(res.data)
+          setError(null)
+        }
+      } catch (err) {
+        if (!cancelled) setError('Failed to load categories')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
     }
-  ]
+
+    fetchCategories()
+    return () => { cancelled = true }
+  }, [])
+
+  const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase())
+  const imageUrl = (c: string) => `https://source.unsplash.com/800x600/?${encodeURIComponent(c)}`
 
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={category.link}
-              className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
+
+        {loading ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="rounded-lg bg-gray-100 h-48 animate-pulse" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center text-red-600">
+            <p>{error}</p>
+            <button
+              onClick={async () => {
+                setError(null)
+                setLoading(true)
+                try {
+                  const res = await axios.get<string[]>('https://fakestoreapi.com/products/categories')
+                  setCategories(res.data)
+                } catch (e) {
+                  setError('Retry failed')
+                } finally {
+                  setLoading(false)
+                }
+              }}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
             >
-              <div className="aspect-w-3 aspect-h-2 bg-gray-200">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                <div className="p-4 w-full">
-                  <h3 className="text-white text-xl font-bold text-center">
-                    {category.name}
-                  </h3>
-                  <div className="mt-2 text-center">
-                    <span className="inline-block bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium group-hover:bg-blue-700 transition-colors">
-                      Shop
-                    </span>
-                  </div>
+              Retry
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((category) => (
+              <Link
+                key={category}
+                href={`/category/${encodeURIComponent(category)}`}
+                className="group relative overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+              <div className="h-64 bg-gray-200 overflow-hidden">
+                  <img
+                    src={category == "jewelery" ? "https://mjjewels.com/blog/wp-content/uploads/2023/03/gold-jewellery-secrets.jpg" : (
+                      category == "electronics" ? "https://res.cloudinary.com/jerrick/image/upload/v1740658144/67c055e09f7d7d001d9227bf.jpg" : ( category == "men's clothing" ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHoE1jtNnKIiYXXNa_vYrdtufR1kx1HUXqAQ&s" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRxLl137hJOBSPnD4_NkpjaDI-F5Q6rQh77Q&s"
+                      )
+                    )}
+                    alt={category}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+
+                {/* Floating info box - bottom-left */}
+                <div className="absolute bottom-4 bg-[#f5f0f0] shadow-lg px-3 py-3 w-11/12 lg:w-13/12 flex items-center justify-between">
+                  <h3 className="text-gray-900 text-xl font-semibold">{titleCase(category)}</h3>
+                  <span className="text-sky-500 text-lg font-medium group-hover:underline">Shop</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 import ProductCard from './ProductCard'
 
 interface Product {
@@ -18,20 +19,24 @@ const ProductGrid = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch products from our API
+    let cancelled = false
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products')
-        const data = await response.json()
-        setProducts(data.slice(0, 8)) // Show only first 8 products
-        setLoading(false)
+        setLoading(true)
+        const res = await axios.get('https://fakestoreapi.com/products')
+        console.log(res.data)
+        if (!cancelled) {
+          setProducts(res.data.slice(0, 8)) // Show only first 8 products
+          setLoading(false)
+        }
       } catch (error) {
         console.error('Error fetching products:', error)
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
 
     fetchProducts()
+    return () => { cancelled = true }
   }, [])
 
   if (loading) {

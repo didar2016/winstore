@@ -17,64 +17,41 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { id, title, price, image, rating } = product
+  const { id, title, price, image, category } = product
+
+  const titleCase = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase())
+  const oldPrice = Math.round(price * 1.08)
+  const discounted = Math.round(price * 0.92)
 
   return (
     <Link href={`/products/${id}`}>
       <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden border border-gray-200">
-        {/* Product Image */}
-        <div className="relative overflow-hidden bg-gray-50 aspect-square">
+        {/* Vendor */}
+        <div className="px-4 pt-3">
+          <p className="text-xs text-gray-500">{titleCase(category)}</p>
+        </div>
+
+        {/* Product Image - centered with whitespace */}
+        <div className="flex items-center justify-center p-4 h-48 bg-white">
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="max-h-36 object-contain transition-transform duration-300 group-hover:scale-105"
           />
-          
-          {/* Discount badge */}
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            Save 10%
-          </div>
-          
-          {/* Quick actions */}
-          <div className="absolute top-2 right-2 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-              ❤️
-            </button>
-            <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-              👁️
-            </button>
-          </div>
         </div>
 
         {/* Product Info */}
-        <div className="p-4">
-          <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
-            {title}
-          </h3>
-          
-          {/* Rating */}
-          <div className="flex items-center mb-2">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className={i < Math.floor(rating.rate) ? "text-yellow-400" : "text-gray-300"}>
-                  ⭐
-                </span>
-              ))}
-            </div>
-            <span className="text-sm text-gray-500 ml-1">({rating.count})</span>
-          </div>
+        <div className="p-4 pt-2">
+          <h3 className="font-medium text-teal-700 text-base leading-tight line-clamp-2 mb-3 text-left">{title}</h3>
 
           {/* Price */}
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-lg font-bold text-blue-600">Rs.{price.toFixed(2)}</span>
-              <span className="text-sm text-gray-500 line-through ml-2">Rs.{(price * 1.1).toFixed(2)}</span>
-            </div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm text-gray-400 line-through">Rs.{oldPrice.toLocaleString()}</span>
+            <span className="text-lg font-bold text-teal-500">Rs.{discounted.toLocaleString()}</span>
           </div>
 
-          {/* Add to Cart Button */}
-          <button 
-            className="w-full mt-3 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors font-medium"
+          <button
+            className="w-full mt-2 bg-teal-500 text-white py-3 rounded hover:bg-teal-600 transition-colors font-medium"
             onClick={(e) => {
               e.preventDefault()
               // Add to cart logic here
