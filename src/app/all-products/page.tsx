@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "@/components/ProductCard";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Product {
   id: number;
@@ -68,6 +69,8 @@ export default function AllProductsPage() {
         </div>
       )}
     </section>
+            <Footer/>
+
     </div>
   );
 }

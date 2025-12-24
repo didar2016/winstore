@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import axios from 'axios'
+import Image from 'next/image'
 
 interface Product {
   id: number
@@ -100,7 +101,7 @@ export default function ProductDetail() {
           {/* Product Images */}
           <div className="space-y-4">
             <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 rounded-lg shadow-lg p-6" style={{minHeight: '320px'}}>
-              <img
+              <Image
                 src={product.image}
                 alt={product.title}
                 className="max-h-56 w-auto object-contain rounded-lg border border-gray-200 shadow-md transition-transform duration-300 hover:scale-105 bg-white p-4"
