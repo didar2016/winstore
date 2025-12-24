@@ -6,9 +6,9 @@ import rights from '../images/rights.png'
 import Image from 'next/image'
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white bg-[#383838]">
-      {/* Main footer content */}
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-[#383838] text-white ">
+      {/* Main footer content */} 
+      <div className="container mx-auto px-4 py-12 ">
         <Image src={footer} alt="Footer Image" className="w-full h-auto object-cover mb-8" />
       </div>
 

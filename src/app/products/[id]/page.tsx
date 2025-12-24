@@ -73,7 +73,7 @@ export default function ProductDetail() {
         <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-          <p className="text-gray-600 mb-8">The product you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mb-8">The product you&apos;re looking for doesn&apos;t exist.</p>
           <Link href="/all-products" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
             Back to All Products
           </Link>
@@ -104,8 +104,11 @@ export default function ProductDetail() {
               <Image
                 src={product.image}
                 alt={product.title}
+                width={224}
+                height={224}
                 className="max-h-56 w-auto object-contain rounded-lg border border-gray-200 shadow-md transition-transform duration-300 hover:scale-105 bg-white p-4"
                 style={{boxShadow: '0 4px 24px rgba(0,0,0,0.08)'}}
+                priority
               />
             </div>
           </div>

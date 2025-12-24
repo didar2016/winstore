@@ -81,6 +81,8 @@ const Categories = () => {
                       )
                     )}
                     alt={category}
+                    width={256}
+                    height={256}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>

@@ -36,6 +36,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <img
             src={image}
             alt={title}
+            width={160}
+            height={144}
             className="max-h-36 object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </div>
