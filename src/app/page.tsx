@@ -23,10 +23,10 @@ export default function Home() {
                 </h2>
                 <p className="text-gray-600 mt-2">Check out our latest products</p>
               </div>
-              <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1">
+              <a href="/all-products" className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1">
                 <span>View All</span>
                 <span>→</span>
-              </button>
+              </a>
             </div>
             <ProductGrid />
           </div>

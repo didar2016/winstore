@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import axios from 'axios'
 
 interface Product {
   id: number
@@ -23,24 +24,25 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
+    let cancelled = false;
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${params.id}`)
-        if (response.ok) {
-          const data = await response.json()
-          setProduct(data)
+        setLoading(true);
+        const res = await axios.get(`https://fakestoreapi.com/products/${params.id}`);
+        if (!cancelled) {
+          setProduct(res.data);
         }
-        setLoading(false)
       } catch (error) {
-        console.error('Error fetching product:', error)
-        setLoading(false)
+        setProduct(null);
+      } finally {
+        setLoading(false);
       }
-    }
-
-    if (params.id) {
-      fetchProduct()
-    }
-  }, [params.id])
+    };
+    if (params.id) fetchProduct();
+    return () => {
+      cancelled = true;
+    };
+  }, [params.id]);
 
   if (loading) {
     return (
@@ -71,8 +73,8 @@ export default function ProductDetail() {
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
           <p className="text-gray-600 mb-8">The product you're looking for doesn't exist.</p>
-          <Link href="/" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-            Back to Home
+          <Link href="/all-products" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+            Back to All Products
           </Link>
         </div>
         <Footer />
@@ -86,10 +88,10 @@ export default function ProductDetail() {
       
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm">
+        <nav className="mb-8 text-sm flex items-center">
           <Link href="/" className="text-gray-500 hover:text-gray-700">Home</Link>
           <span className="mx-2 text-gray-400">/</span>
-          <Link href="/products" className="text-gray-500 hover:text-gray-700">Products</Link>
+          <Link href="/all-products" className="text-gray-500 hover:text-gray-700">All Products</Link>
           <span className="mx-2 text-gray-400">/</span>
           <span className="text-gray-900">{product.title}</span>
         </nav>
@@ -97,25 +99,13 @@ export default function ProductDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div className="space-y-4">
-            <div className="aspect-square bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 rounded-lg shadow-lg p-6" style={{minHeight: '320px'}}>
               <img
                 src={product.image}
                 alt={product.title}
-                className="w-full h-full object-cover"
+                className="max-h-56 w-auto object-contain rounded-lg border border-gray-200 shadow-md transition-transform duration-300 hover:scale-105 bg-white p-4"
+                style={{boxShadow: '0 4px 24px rgba(0,0,0,0.08)'}}
               />
-            </div>
-            
-            {/* Thumbnail images - placeholder for multiple images */}
-            <div className="grid grid-cols-4 gap-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="aspect-square bg-white rounded border-2 border-gray-200 overflow-hidden cursor-pointer hover:border-blue-500">
-                  <img
-                    src={product.image}
-                    alt={`${product.title} view ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
             </div>
           </div>
 

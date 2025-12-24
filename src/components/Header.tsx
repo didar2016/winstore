@@ -116,6 +116,12 @@ const Header = () => {
                   Home
                 </Link>
                 <Link
+                  href="/all-products"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  All Products
+                </Link>
+                <Link
                   href="/products"
                   className="hover:text-blue-400 transition-colors"
                 >
